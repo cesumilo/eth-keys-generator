@@ -10,8 +10,9 @@ function check_error() {
 
 function check_os() {
     gawk -F= '/^NAME/{print $2}' /etc/os-release | grep "Ubuntu"
-    if [ "$?" != "0" ]; then
-        (>&2 echo "[WARNING] This script has been tested only on Ubuntu.")
+    if [ "$?" == "0" ]; then
+        (>&2 echo "[WARNING] This script has been tested only on Ubuntu.\nPress ENTER to continue or CTRL-C to exit.")
+        read 1
     fi
 }
 
