@@ -1,0 +1,57 @@
+.TH LIBKECCAK_HMAC_INITIALISE 3 LIBKECCAK
+.SH NAME
+libkeccak_hmac_initialise - Initialise HMAC-hashing state
+.SH SYNOPSIS
+.LP
+.nf
+#include <libkeccak.h>
+.P
+int
+libkeccak_hmac_initialise(libkeccak_hmac_state_t *\fIstate\fP,
+                          const libkeccak_spec_t *\fIspec\fP,
+                          const char *\fIkey\fP, size_t \fIkey_length\fP);
+.fi
+.P
+Link with
+.IR -lkeccak .
+.SH DESCRIPTION
+The
+.BR libkeccak_hmac_initialise ()
+function initialises
+.I *state
+and sets the algorithm tuning parameters to
+those specified by
+.IR *spec ,
+and the key to
+.I key
+of length
+.IR key_length .
+.SH RETURN VALUES
+The
+.BR libkeccak_hmac_initialise ()
+function returns 0 upon successful completion.
+On error, -1 is returned and
+.I errno
+is set to describe the error.
+.SH ERRORS
+The
+.BR libkeccak_hmac_initialise ()
+function may fail for any specified for the functions
+.BR malloc (3)
+and
+.BR realloc (3).
+.SH SEE ALSO
+.BR libkeccak_hmac_create (3),
+.BR libkeccak_hmac_destroy (3),
+.BR libkeccak_hmac_fast_destroy (3),
+.BR libkeccak_hmac_copy (3),
+.BR libkeccak_hmac_marshal_size (3),
+.BR libkeccak_spec_sha3 (3),
+.BR libkeccak_spec_shake (3),
+.BR libkeccak_spec_rawshake (3),
+.BR libkeccak_spec_check (3),
+.BR libkeccak_generalised_spec_initialise (3),
+.BR libkeccak_state_initialise (3)
+.SH BUGS
+Please report bugs to https://github.com/maandree/libkeccak/issues or to
+maandree@kth.se

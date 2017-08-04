@@ -1,0 +1,43 @@
+.TH LIBKECCAK_STATE_DESTROY 3 LIBKECCAK
+.SH NAME
+libkeccak_state_destroy - Destroys a hash state with erasure
+.SH SYNOPSIS
+.LP
+.nf
+#include <libkeccak.h>
+.P
+void
+libkeccak_state_destroy(libkeccak_state_t *\fIstate\fP);
+.fi
+.P
+Link with
+.IR -lkeccak .
+.SH DESCRIPTION
+The
+.BR libkeccak_state_destroy ()
+function releases the allocations stored in
+.IR *state ,
+without releasing the allocation of
+.I state
+itself.
+.PP
+The
+.BR libkeccak_state_destroy ()
+function securely erases sensitive data.
+.SH RETURN VALUES
+The
+.BR libkeccak_state_destroy ()
+function does not return any value.
+.SH ERRORS
+The
+.BR libkeccak_state_destroy ()
+function cannot fail.
+.SH SEE ALSO
+.BR libkeccak_state_free (3),
+.BR libkeccak_state_fast_destroy (3),
+.BR libkeccak_state_initialise (3),
+.BR libkeccak_state_reset (3),
+.BR libkeccak_state_wipe (3)
+.SH BUGS
+Please report bugs to https://github.com/maandree/libkeccak/issues or to
+maandree@kth.se

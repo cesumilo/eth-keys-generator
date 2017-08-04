@@ -1,0 +1,115 @@
+.TH LIBKECCAK_SHAKESUM_FD 3 LIBKECCAK
+.SH NAME
+libkeccak_shakesum_fd - Calculate a SHAKE hashsum of a file
+.SH SYNOPSIS
+.LP
+.nf
+#include <libkeccak.h>
+.P
+int
+libkeccak_shakesum_fd(int \fIfd\fP, libkeccak_state_t *\fIstate\fP,
+                      long int \fIsemicapacity\fP, long int \fIoutput\fP,
+                      char *\fIhashsum\fP);
+.fi
+.P
+Link with
+.IR -lkeccak .
+.SH DESCRIPTION
+The
+.BR libkeccak_shakesum_fd ()
+function calculates a SHAKE hashsum of a file, whose file
+desriptor is specified by
+.I fd
+(and should be at the beginning of the file.) The hash
+algorithm is tuned by the
+.I semicapacity
+and
+.I output
+parameters; they specify the half of the capacity and the
+output size, respectively, in bits.
+.PP
+The hash is stored in binary form to
+.IR hashsum .
+.I hashsum
+should have an allocation size of at least
+.RI ((( output
++ 7) / 8) * sizeof(char)).
+.PP
+.I *state
+should not be initialised.
+.BR libkeccak_shakesum_fd ()
+initialises
+.I *state
+itself. Therefore there would be a memory leak if
+.I *state
+is already initialised.
+.SH RETURN VALUES
+The
+.BR libkeccak_shakesum_fd ()
+function returns 0 upon successful completion.
+On error, -1 is returned and
+.I errno
+is set to describe the error.
+.SH ERRORS
+The
+.BR libkeccak_shakesum_fd ()
+function may fail for any reason, except those resulting in
+.I errno
+being set to
+.BR EINTR ,
+specified for the functions
+.BR read (2),
+.BR malloc (3),
+and
+.BR realloc (3).
+.SH NOTES
+Be aware,
+.BR libkeccak_shakesum_fd ()
+hashes the file until the end has been reached. For pipes
+and sockets and this means until the file has been closed.
+But for character devices, this usually means never.
+Attempting to hash files in /dev is therefore usually a
+bad idea.
+.BR libkeccak_shakesum_fd ()
+does not check for the file length or file type before
+hashing as this could limit what you can do, and make
+the library more complex.
+.PP
+.BR libkeccak_shakesum_fd ()
+does not stop if interrupted
+.RB ( read (2)
+returns
+.BR EINTR .)
+.PP
+.BR libkeccak_shakesum_fd ()
+assumes all information is non-sensitive, and will
+therefore not perform any secure erasure of information.
+.PP
+.BR libkeccak_shakesum_fd ()
+does not validate the tuning of the algorithm.
+.SH EXAMPLE
+This example calculates the SHAKE256(, 512) hash of the input
+from stdin, and prints the hash, in hexadecimal form, to stdout.
+.LP
+.nf
+libkeccak_state_t state;
+if (libkeccak_shakesum_fd(STDIN_FILENO, &state, 256, 512, binhash) < 0)
+    goto fail;
+libkeccak_behex_lower(hexhash, binhash, sizeof(binhash));
+printf("%s\\n", hexhash);
+libkeccak_state_destroy(&state);
+.fi
+.SH SEE ALSO
+.BR libkeccak_behex_lower (3),
+.BR libkeccak_behex_upper (3),
+.BR libkeccak_generalised_sum_fd (3),
+.BR libkeccak_keccaksum_fd (3),
+.BR libkeccak_sha3sum_fd (3),
+.BR libkeccak_rawshakesum_fd (3),
+.BR libkeccak_spec_shake (3),
+.BR libkeccak_spec_check (3),
+.BR libkeccak_generalised_spec_initialise (3),
+.BR libkeccak_state_initialise (3)
+.SH BUGS
+Please report bugs to https://github.com/maandree/libkeccak/issues or to
+maandree@kth.se

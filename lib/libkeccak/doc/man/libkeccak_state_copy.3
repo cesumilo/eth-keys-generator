@@ -1,0 +1,44 @@
+.TH LIBKECCAK_STATE_COPY 3 LIBKECCAK
+.SH NAME
+libkeccak_state_copy - Copies hash state
+.SH SYNOPSIS
+.LP
+.nf
+#include <libkeccak.h>
+.P
+int
+libkeccak_state_copy(libkeccak_state_t *\fIdest\fP,
+                     const libkeccak_state_t *\fIsrc\fP);
+.fi
+.P
+Link with
+.IR -lkeccak .
+.SH DESCRIPTION
+The
+.BR libkeccak_state_copy ()
+function initialises
+.I *dest
+to be identical to
+.IR *src .
+This includes all members of the
+.B libkeccak_state_t
+structure, including the state of the sponge and the
+message chunk buffer.
+.SH RETURN VALUES
+The
+.BR libkeccak_state_copy ()
+function returns 0 upon successful completion.
+On error, -1 is returned and
+.I errno
+is set to describe the error.
+.SH ERRORS
+The
+.BR libkeccak_state_copy ()
+function may fail for any specified for the function
+.BR malloc (3).
+.SH SEE ALSO
+.BR libkeccak_state_duplicate (3),
+.BR libkeccak_state_initialise (3)
+.SH BUGS
+Please report bugs to https://github.com/maandree/libkeccak/issues or to
+maandree@kth.se

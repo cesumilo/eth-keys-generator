@@ -1,0 +1,440 @@
+\input texinfo   @c -*-texinfo-*-
+
+@c %**start of header
+@setfilename argparser.info
+@settitle argparser
+@afourpaper
+@documentencoding UTF-8
+@documentlanguage en
+@finalout
+@c %**end of header
+
+
+@dircategory Development
+@direntry
+* argparser: (argparser).            Command line argument parser library
+@end direntry
+
+
+@copying
+Copyright @copyright{} 2013 Mattias Andrée
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+Texts. A copy of the license is included in the section entitled
+``GNU Free Documentation License''.
+@end quotation
+@end copying
+
+@ifnottex
+@node Top
+@top argparser -- Command line argument parser library
+@insertcopying
+@end ifnottex
+
+@titlepage
+@title argparser
+@subtitle Command line argument parser library
+@author by Mattias Andrée (maandree)
+
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@contents
+
+
+
+@menu
+* Overview::                        Brief overview of @command{argparser}.
+* Python version::                  Using the Python version.
+* Java version::                    Using the Java version.
+* C version::                       Using the C version.
+* Bash version::                    Using the Bash version.
+* Trigger functions::               Trigger events at the time an option is parsed.
+* Optional arguments::              Using optional arguments.
+* Abbreviations::                   Using option abbreviations.
+* Colours in help message::         Configuring colour use in help message
+* GNU Free Documentation License::  Copying and sharing this manual.
+@end menu
+
+
+
+@node Overview
+@chapter Overview
+
+Command line argument parser library for multiple languages with the
+capability of both @code{-} and @code{+} short options and both
+@code{--} and @code{++} long options. It supports variadic options,
+colours and @code{--} and temporary @code{--} using @code{++}.
+
+A variadic option is a option that takes all arguments placed after
+it as an argument associated with it, rather than just the directly
+following argument as an argumented option does.
+
+Options that are missing descriptions are not printed by the help
+functions.
+
+
+
+@node Python version
+@chapter Python version
+
+To use argparser you need to import @code{ArgParser} from @code{argparser}
+using the instruction @code{from argparser import *}.
+
+The class @code{ArgParser} is used for parsing argument and requires an
+instance. @code{ArgParser}'s constructor takes two manditory arguments
+and three optional arguments. The first argument, @code{description}, is
+a short, single-line, description of the program. The second argument,
+@code{usage}, is multi-line usage text that is recommended to contain ANSI
+colour escape sequences (for portability ESC 39m, ESC 49m and colours
+beyond the lower 8 are not recommended to be used); @code{None} can
+be used if you do not have a usage descriptor.
+@code{ArgParser}'s constructors there optional arguments are:
+@code{longdescription}, @code{program} and @code{usestderr}.
+@code{longdescription} is a long, multi-line, description of the program;
+@code{None} can be used if you do not have a long description.
+@code{program} is the program part of the executed command, but if you
+rather, you can provide an exact name. You can also use the static function
+@code{ArgParser.parent_name} to get the program part of the executed command
+of a parent proces, it takes two optional arguments: @code{levels}, the
+number of parent levels, by default 1; and @code{hasinterpretor}, whether
+to get the name from an invocation of Python, by default false.
+@code{usestderr} is by default @code{False} which means that printing is
+done to stdout, otherwise, printing is done to stderr.
+
+Before parsing arguments you need to populate the @code{ArgParser}
+instance with valid options. There are three methods for this,
+@code{add_argumentless}, @code{add_argumented} and @code{add_variadic},
+that adds argumentless options, argumented options and variadic options
+respectively. With the exception that @code{add_argumentless} does not
+have the parameter @code{arg}, these three arguments has one manditory
+argument, @code{alternatives}, and three optional arguments: @code{default},
+@code{arg}, @code{help}. @code{default}'s deault value is zero, and either
+the primary alternative or its index in @code{alternatives}.
+@code{alternatives} is a list of alternatives, for example, a help option
+could have @code{['-h', '--help']}. @code{arg} is a descriptive short name
+of a argument associated with the option, and @code{help} is description
+of the option and may span multiple lines but should only do so if the
+lines below the first is just extra details.
+
+When you have populated your @code{ArgParser} with options, it is time
+to parse arguments, it is done with the method @code{parse} that optional
+takes and list of arguments. If you choose to use a list of arguments
+rather than letting @code{ArgParser} use arguments used to start the
+program, the first element will not be parsed as it is assumed to be the
+executable. If you want long options with just one dash or plus, which
+disables short options, you can pass @code{True}, as the second (option)
+argument.
+
+If you now want to use any option alternative rather than just the
+primary (using just the primary is good to keep your code consistent)
+invoke the nulladic method @code{support_alternatives}.
+
+Before using your options you should so some checks that the combination
+of options and arguments are valid. There are some methods provided to do
+this. @code{test_exclusiveness} checks that no confliction options are
+used, as the first argument, a set of options provided from which at most
+one may be used; as a optional second argument, a return code can be provided
+if you want the program to exit if there are option conflicts.
+@code{test_allowed} checks that only allowed options are used, as the first
+argument, a set of options provided in which all used arguments must exist;
+as a optional second argument, a return code can be provided if you want the
+program to exit if there are out of context option.
+@code{test_files} checks that the number of arguments not associated with
+an option is within an acccepted range, it takes three option arguments,
+@code{min}, @code{max} and @code{exit_value}. @code{min} is the minimum count,
+@code{max} is the maximum count, @code{None} if unlimited, and @code{exit_value}
+is a return code can be provided if you want the program to exit if there
+are out of context option. Remember that you should also check that the
+number of times an option is used is acceptable.
+
+After running @code{parse}, your @code{ArgParser} has five attributes:
+@code{unrecognisedCount}, the number of unrecognised options; and
+@code{message}, the join of @code{files} which is all arguments not
+associated with an option, @code{arguments} the parsed arguments, and
+@code{argcount}, the number of arguments in @code{arguments}.
+
+All valid options are stored in your @code{ArgParser}'s @code{opts},
+it is a dictionary from the option to either @code{None} if the option
+has not been used, or a list of all used values, in order. A variadic
+option without any argumnt will have a empty list and a argumentless
+option will have list filled with @code{None}.
+
+To print a help page based on the constructor arguments and populated
+options invoke the nulladic method @code{help}.
+
+
+
+@node Java version
+@chapter Java version
+
+The JAR for ArgParser, @file{ArgParser.jar}, is located in @file{/usr/lib}.
+When using it you need to import @code{argparser.ArgParser}.
+
+@code{ArgParser} has six constructors, conforming to:
+@code{description, usage, [longDescription, [program]], [useStderr]}.
+These correspond to those in the Python version.
+
+@code{ArgParser.parent_name} from the Python version is named
+@code{ArgParser.parentName} in the Java version and is identical
+except it parses Java invocation rather then Python invocation.
+Further @code{support_alternatives}, @code{test_exclusiveness},
+@code{test_allowed}, @code{test_files} and @code{help} are named
+@code{supportAlternatives}, @code{testExclusiveness}, @code{testAllowed},
+@code{testFiles} and @code{help} respectively and @code{testFiles}
+without @code{min} is named @code{testFilesMax} and @code{testFiles}
+without @code{max} is named @code{testFilesMin}.
+
+@code{parse} takes an array of arguments, which excludes the executable,
+and optionally whether to use long options with one dash or plus and no
+short options.
+
+@code{message} is a @code{String}, @code{files} is a @code{ArrayList<String>},
+@code{unrecognisedCount} is a @code{int}, @code{arguments} is a @code{String[]},
+and @code{opts} is a @code{HashMap<String, String[]>}.
+@code{argcount} does not exist.
+
+To populate the @code{ArgParser} with valid options, use the method
+@code{add} with the option and optional, before or after, the description.
+An option is created using a constructor for either @code{Argumentless},
+@code{Argumented} or @code{Variadic}.
+@code{Argumentless}'s constructor takes an @code{String[]} of alternatives
+and optional, before or after, the index of the primary alternative. If
+the index is not after the alternative array, the alternatives parameter
+is variadic and each alternative can be an argument.
+@code{Argumentless}'s constructor and @code{Variadic}'s constructor also
+takes a descriptive short name of a argument associated with the option
+optioned anywhere, and the alterantive array is variadic if places last.
+
+
+
+@node C version
+@chapter C version
+
+To use ArgParser, compile with the linker option @code{-largparser}
+and use the include @code{#include <argparser.h>}. ArgParser uses the
+namespace @code{args}. When you are done using ArgParser you should
+free its resources using function @code{args_dispose}.
+
+@code{args_init} corresponds the the @code{ArgParser} constructor in
+the Python version, but all parameters are manditory, additionally
+there as an argument that should be set to be true if you want to use
+long options with one dash or plus but not short options, as well as
+a seventh argument that you should set to @code{null} until you
+have read @ref{Abbreviations}.
+
+@code{args_arguments}, @code{args_arguments_count},
+@code{args_unrecognised_count}, @code{args_message} and @code{args_files}
+works as their Python version counterparts, and @code{args_files_count}
+tells how many elements there are in @code{args_files}.
+
+@code{args_parent_name} takes the number of levels as a manditory
+parameters, and no other parameter. @code{args_help} and
+@code{args_support_alternatives} takes no parameters, and @code{args_parse}
+takes @code{argc} and @code{argv}, the arguments in your main method.
+
+@code{args_test_files_min}, @code{args_test_files_max} and
+@code{args_test_files} works are their Java version counterparts, except
+that an return code may not be specified.
+@code{args_test_allowed} and @code{args_test_exclusiveness} both takes
+a string array followed by the number of strings in that array, and no
+return code.
+
+To popule ArgParser with valid options, use the method @code{args_add_option}
+which takes the options followed by a description as its parameters, the
+description can be @code{NULL}.
+To create an options use either @code{args_new_argumentless},
+@code{args_new_argumented} or @code{args_new_variadic}. With the exception
+that @code{args_new_argumentless} does not have the second parameters,
+these methods have three parameters: a trigger function pointer a descriptive
+short name of a argument associated with the option, the index of the
+primary alternative, and finally a variadic parameter with the alternatives,
+meaning that each alternative is an argument.
+
+To list all valid options, use the method @code{args_get_opts} which returns
+a string array of all options, and @code{args_get_opts_count} which returns
+the number of strings in the array returned by @code{args_get_opts}.
+@code{args_opts_contains} with a option checks whether the option is available,
+while @code{args_opts_used} checks whether it is used. @code{args_opts_new}
+adds option and @code{args_opts_clear} removes all values stored for a
+option. @code{args_opts_append} which takes a option and a value as
+parameters store a value for a option and @code{args_opts_put} sets all
+value for an option, it works the same way, except a string array of values
+is used rather than just a string with a value, @code{args_opts_put_count}
+stores the number of values. The get a number of values for a option, which
+include @code{NULL} for argumentless occurrences, use @code{args_opts_get_count},
+and to retrieve the array of values, use @code{args_opts_get}. Both takes
+only the option as parameter.
+
+
+
+@node Bash version
+@chapter Bash version
+
+The Bash version is written to be supported for older versions of Bash,
+and is used by @code{source}:ing @file{/usr/lib/argparser.bash}. It works
+similarly to the C version and @code{args_dispose} should be invoked when
+done, optionally with the ID of the process that allocated the resouces.
+
+Rather than a boolean, @code{args_init} takes a file descriptor as the
+fifth argument, @code{1} for stdout (default) and @code{2} for stderr.
+
+@code{args_parent_name} takes a boolean as a second parameter that tells
+whether to return all arguments, on one line each, and defaults to false.
+Booleans are true if and only if the value is @code{1}.
+
+@code{args_test_exclusiveness} and @code{args_test_allowed} are variadic
+and does not have a parameter for the number of options.
+
+@code{args_test_files_min} and @code{args_test_files_max} does not exist,
+but @code{args_test_files} takes the minimum count and optionally the
+maxmimum count.
+
+To add valid options use the methods @code{args_add_argumentless},
+@code{args_add_argumented} and @code{args_add_variadic}. With the
+except that @code{args_add_argumentless} does not take a name of
+the argument, these methods takes the name of the trigger function,
+index of the primary alternative, a one word name of the argument,
+a description (empty for none), and then one argument per alternative.
+
+@code{args_argcount} is the number of elements in @code{args_arguments}
+and @code{args_files} does not have any such counterpart.
+@code{args_has_message} is @code{1} if there is a message, that is,
+if the length of @code{args_files} is not zero, and otherwise @code{0}.
+
+To read the parsed arguments, the method @code{args_option} is used.
+Its exit value is @code{0} if successful or if the return is true,
+@code{1} if the return is false, and @code{2} on failure.
+@code{args_option has} with a option name is used to check if a option
+is used. @code{args_option count} with a option name echos the number
+of values associated with the option. @code{args_option null} with a
+option name and value index checks whether the value with that index
+is null. @code{args_option get} with a option name echos all values,
+one line each, but if any number of indices are also used only those
+values are echoed.
+
+
+
+@node Trigger functions
+@chapter Trigger functions
+
+If you do not want to add a trigger function, use an empty string
+instead in the Bash version, and @code{NULL} in the C version.
+In the Python version, the trigger function is the last parameter
+in the functions for creating options, and defaults to @code{None}.
+
+Trigger functions are invoked at the time an option is found an
+can be used to keep track of the order of the options, or to
+add additional options.
+
+The trigger functions are functions that does not return any value,
+and has two or three parameters: the used option alternative, the
+standard option alternative, and for argumented but not variadic
+options: the used value but @code{null}@footnote{Or @code{NULL} or
+@code{None} depending on language} if there was not argument.
+In the Bash version only two arguments are used if there was not
+argument is the value of @code{$#} will be 2 instead of 3.
+
+The the Java version, the standard option is not passed, so there
+are only one or two parameters. Instead, the function is defined
+by overriding the function @code{trigger} when creating the option,
+and @code{this.standard} can be used to get the standard option
+alternative.
+
+
+
+@node Optional arguments
+@chapter Optional arguments
+
+Optionally argumented options work like argumented options.
+They are named @code{Optargumented} options the Java version
+and @code{optargumented} in the other version. The differense
+from argumented options are that the argument must be sticky,
+that is, not separated to another command line argument,
+unless its @code{stickless} method returns true. The default
+behaviour is that the @code{stickless} method returns true
+if and only if the argument does not start with @code{-}
+nor @code{+}.
+
+The stickless method is the last argument in the Python
+version, the first argument in the Bash version as well as
+in the C version (and returns a @code{long int}). The the
+Java version it is definied by reimplementing it when
+creating a subclass to @code{Optargumented}. The stickless
+method only has one parameter, the argument that is being
+tested for using without being sticky.
+
+
+
+@node Abbreviations
+@chapter Abbreviations
+
+Abbreviations is a functionallity that lets the user just
+write the beginning of an option and not the complete name.
+Conside you have the options @option{--help} and
+@option{--help-all}. If the user types @option{--help-} we
+know that he probably meant @option{--help-all}, but if
+less then @option{--help} is written so do not know.
+
+The author of the software that uses the library can
+chose whether to enable this, disable this or something
+completely different with it, for example typo correction.
+
+The constructor in the Python version and the initialisers
+in the C version and the Bash version are blessed with
+an additionall parameter. A function pointer that is used
+to get the correction of an unrecognised option. If this
+is left out — not possible in the C version — or is is
+@code{null} (C), @code{None} (Python) or empty (Bash) this
+feature is disabled. The function should take one string,
+the unrecognised option, an array (a list in Python) of
+strings, all recognised options, and return a string, the
+selection options (the expansion of the unrecognised option).
+If exactly one option cannot be selected @code{null} (C, Java)
+or @code{None} (Python) should be returned and in the Bash
+version the exit value for function should not equal zero.
+In the Java version you override the class's function
+@code{abbreviations}.
+
+For the standard behaviour of abbreviation expansion, use
+the function @code{args_standard_abbreviations} (C and Bash),
+@code{ArgParser.standard_abbreviations} (Python) or
+@code{ArgParser.standardAbbreviations} (Java).
+In the Java version you can do this by simply using
+@code{ArgParser.Abbreviations} instead of @code{ArgParser}.
+
+
+
+
+@node Colours in help message
+@chapter Colours in help message
+
+The help methods, in ArgParser and an optional argument, if use
+you can set, using a true value, to always use colours, or, using
+a false value, to never user colours. Otherwise, colours will
+be used if the output is not piped.
+
+In the Bash version, @code{0} is considered to be true, all
+other values are considered to be false, except an empty string
+(used if obmitted) which is used for automatic, that is,
+true if the output is not piped.
+
+In the C version, @code{1} is considered to be true, @code{0}
+is considered to be false and all other values, including
+if the argument is obmitted (it is an optional argument),
+are used for automatic mode.
+
+
+
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
+@include fdl.texinfo
+
+@bye
+

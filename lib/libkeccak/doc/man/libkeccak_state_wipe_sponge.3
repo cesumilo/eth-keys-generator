@@ -1,0 +1,35 @@
+.TH LIBKECCAK_STATE_WIPE_SPONGE 3 LIBKECCAK
+.SH NAME
+libkeccak_state_wipe_sponge - Securely erase the Keccak sponge state
+.SH SYNOPSIS
+.LP
+.nf
+#include <libkeccak.h>
+.P
+void
+libkeccak_state_wipe_sponge(libkeccak_state_t *\fIstate\fP);
+.fi
+.P
+Link with
+.IR -lkeccak .
+.SH DESCRIPTION
+The
+.BR libkeccak_state_wipe_sponge ()
+function securely erases the state of the Keccak sponge.
+.SH RETURN VALUES
+The
+.BR libkeccak_state_wipe_sponge ()
+function does not return any value.
+.SH ERRORS
+The
+.BR libkeccak_state_wipe_sponge ()
+function cannot fail.
+.SH SEE ALSO
+.BR libkeccak_state_wipe_message (3),
+.BR libkeccak_state_wipe (3),
+.BR libkeccak_state_fast_destroy (3),
+.BR libkeccak_state_destroy (3),
+.BR libkeccak_state_reset (3)
+.SH BUGS
+Please report bugs to https://github.com/maandree/libkeccak/issues or to
+maandree@kth.se

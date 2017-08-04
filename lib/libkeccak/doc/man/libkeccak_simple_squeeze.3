@@ -1,0 +1,38 @@
+.TH LIBKECCAK_SIMPLE_SQUEEZE 3 LIBKECCAK
+.SH NAME
+libkeccak_simple_squeeze - Runs Keccak-f a number of times
+.SH SYNOPSIS
+.LP
+.nf
+#include <libkeccak.h>
+.P
+void
+libkeccak_simple_squeeze(libkeccak_state_t *\fIstate\fP, long int \fItimes\fP);
+.fi
+.P
+Link with
+.IR -lkeccak .
+.SH DESCRIPTION
+The
+.BR libkeccak_simple_squeeze ()
+function runs Keccak-f
+.I times
+times on the hashing
+process described by
+.IR *state .
+.SH RETURN VALUES
+The
+.BR libkeccak_simple_squeeze ()
+function does not return any value.
+.SH ERRORS
+The
+.BR libkeccak_simple_squeeze ()
+function cannot fail.
+.SH SEE ALSO
+.BR libkeccak_digest (3),
+.BR libkeccak_fast_digest (3),
+.BR libkeccak_fast_squeeze (3),
+.BR libkeccak_squeeze (3)
+.SH BUGS
+Please report bugs to https://github.com/maandree/libkeccak/issues or to
+maandree@kth.se
