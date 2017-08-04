@@ -40,8 +40,14 @@ function clean_prev_installs() {
 }
 
 function install_deps() {
+    echo "[*] Installing auto-auto-complete."
+    cd lib/auto-auto-complete
+    make
+    check_error $? "something went wrong during auto-auto-complete compilation."
+    export PATH=$PATH:$PWD/bin
+
     echo "[*] Installing argparser."
-    cd lib/argparser
+    cd ../argparser
     make c
     check_error $? "something went wrong during argparser compilation."
     cp bin/argparser.so ../bin/libargparser.so
