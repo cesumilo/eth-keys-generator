@@ -1,0 +1,37 @@
+NAME
+	auto-auto-complete - Autogenerate shell auto-completion scripts
+
+SYNOPSIS
+	auto-auto-complete SHELL -o OUTPUT -s SOURCE [VARIABLE=VALUE]...
+	auto-auto-complete SHELL -w COMMAND
+
+DESCRIPTION
+	auto-auto-complete generates a shell auto-completion script for
+	the shell SHELL, from the file SOURCE, and stores it to OUTPUT.
+	Or, if -w is used, print to stdout where such generate file
+	installed be stored for the command COMMAND, and the shell SHELL.
+
+	When generating a file, a series of variables can defined using
+	the argument pattern 'VARIABLE=VALUE'.
+
+OPTIONS
+	-o, --output OUTPUT
+		The name of the file to generate.
+
+	-s, -f, --source, --file SOURCE
+		The name of the file to parse.
+
+	-w, --where COMMAND
+		Print where the script shall be installed if
+		the name of the command is COMMAND.
+
+RATIONALE
+	Noone really wants to write shell auto-completion scripts,
+	especially not for more than one shell. But of course we
+	want to have it.
+
+SEE ALSO
+	bash-completion, bash(1), fish(1), zsh(1)
+
+	Full documentation available locally via: info '(auto-auto-complete)'
+

@@ -1,0 +1,25 @@
+(auto-auto-complete
+	(default (arg SHELL_OR_DEFINITION)
+		 (files -f)
+		 (suggest default)
+		 (desc 'Specify a shell or variable definition'))
+	
+	(argumented (options -s -f --source --file)
+		    (complete --source)
+		    (arg SOURCE_FILE)
+		    (files -f)
+		    (desc 'Specify the input auto-auto-complete script'))
+	(argumented (options -o --output)
+		    (complete --output)
+		    (arg OUTPUT_FILE)
+		    (files -f)
+		    (desc 'Specify the output shell auto-completion script'))
+	(argumented (options -w --where)
+		    (complete --where)
+		    (arg COMMAND)
+		    (files -0)
+		    (desc 'Specify a command whose shell auto-completion script path should be printed'))
+	
+	(suggestion default (verbatim bash zsh fish VARIABLE=VALUE))
+)
+
