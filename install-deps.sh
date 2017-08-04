@@ -8,38 +8,67 @@ function check_error() {
     fi
 }
 
+function check_os() {
+    gawk -F= '/^NAME/{print $2}' /etc/os-release | grep "Ubuntu"
+    if [ "$?" != "0" ]; then
+        (>&2 echo "[WARNING] This script has been tested only on Ubuntu.")
+    fi
+}
+
+function check_deps() {
+    dpkg-query -W -f='${Status}\n' texinfo | grep "^install ok"
+    check_error $? "texinfo package not installed.\nYou can use the following command line to solve this issue:\n\tsudo apt-get install texinfo"
+
+    dpkg-query -W -f='${Status}\n' openssl | grep "^install ok"
+    check_error $? "openssl package not installed.\nYou can use the following command line to solve this issue:\n\tsudo apt-get install openssl"
+
+    dpkg-query -W -f='${Status}\n' make | grep "^install ok"
+    check_error $? "openssl package not installed.\nYou can use the following command line to solve this issue:\n\tsudo apt-get install make"
+}
+
+function clean_prev_installs() {
+    if [ -d "./lib/include" ]; then
+        rm -r ./lib/include
+    fi
+
+    if [ -d "./lib/bin" ]; then
+        rm -r ./lib/bin
+    fi
+
+    mkdir -p lib/include
+    mkdir -p lib/bin
+}
+
+function install_deps() {
+    echo "[*] Installing argparser."
+    cd lib/argparser
+    make c
+    check_error $? "something went wrong during argparser compilation."
+    cp bin/argparser.so ../bin/libargparser.so
+
+    echo "[*] Installing libkeccak."
+    cd ../libkeccak
+    make
+    check_error $? "something went wrong during libkeccak compilation."
+    cp bin/lib* ../bin/
+
+    echo "[*] Installation sha3sum."
+    cd ../sha3sum
+    CFLAGS="-isystem $PWD/../include" LB_LIBRARY_PATH=$PWD/../ make
+    check_error $? "something went wrong during sha3sum compilation."
+    export PATH=$PATH:$PWD/bin
+}
+
+echo "[*] Checking operating system."
+check_os
+
 echo "[*] Checking for dependencies."
-dpkg-query -W -f='${Status}\n' texinfo | grep "^install ok"
-check_error $? "texinfo package not installed.\nYou can use the following command line to solve this issue:\n\tsudo apt-get install texinfo"
+check_deps
 
 echo "[*] Cleaning previous installations."
-if [ -d "./lib/include" ]; then
-    rm -r ./lib/include
-fi
+clean_prev_installs
 
-if [ -d "./lib/bin" ]; then
-    rm -r ./lib/bin
-fi
-
-mkdir -p lib/include
-mkdir -p lib/bin
-
-echo "[*] Installing argparser."
-cd lib/argparser
-make c
-check_error $? "something went wrong during argparser compilation."
-cp bin/argparser.so ../bin/libargparser.so
-
-echo "[*] Installing libkeccak."
-cd ../libkeccak
-make
-check_error $? "something went wrong during libkeccak compilation."
-cp bin/lib* ../bin/
-
-echo "[*] Installation sha3sum."
-cd ../sha3sum
-CFLAGS="-isystem $PWD/../include" LB_LIBRARY_PATH=$PWD/../ make
-check_error $? "something went wrong during sha3sum compilation."
-export PATH=$PATH:$PWD/bin
+echo "[*] Installing dependencies."
+install_deps
 
 echo "[OK] All done."
