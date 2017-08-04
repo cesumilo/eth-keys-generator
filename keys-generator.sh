@@ -8,8 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 key_name=$1
-
-#git clone https://github.com/maandree/sha3sum.git
+export LD_LIBRARY_PATH=$PWD/lib/bin
 
 echo -e "----------------- Keys Generator -----------------"
 echo -e "-      Algorithm (elliptic curve): secp256k1     -"
