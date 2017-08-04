@@ -63,7 +63,7 @@ function install_deps() {
     cd ../sha3sum
     CFLAGS="-isystem $PWD/../include" LB_LIBRARY_PATH=$PWD/../ make
     check_error $? "something went wrong during sha3sum compilation."
-    export PATH=$PATH:$PWD/bin
+    SHA3_SUM_PATH=$PATH:$PWD/bin
 }
 
 if [ -n "$1" ] && [ "$1" = "clean" ]; then
@@ -90,4 +90,4 @@ clean_prev_installs
 echo "[*] Installing dependencies."
 install_deps
 
-echo "[OK] All done."
+echo -e "[OK] All done.\nUse the following command line to complete the installation:\n\texport PATH=$SHA3_SUM_PATH"
