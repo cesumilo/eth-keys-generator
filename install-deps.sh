@@ -66,7 +66,7 @@ function install_deps() {
     export PATH=$PATH:$PWD/bin
 }
 
-if [ -z "$1" && "$1" = "clean" ]; then
+if [ -z "$1" ] && [ "$1" = "clean" ]; then
     cd lib/auto-auto-complete
     make clean
     cd ../argparser
