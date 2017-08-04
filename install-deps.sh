@@ -10,7 +10,7 @@ function check_error() {
 
 echo "[*] Checking for dependencies."
 dpkg-query -W -f='${Status}\n' texinfo | grep "^install ok"
-check_error $? "texinfo package not installed.\nYou can use the following command line to solve this issue:\n\rsudo apt-get install texinfo"
+check_error $? "texinfo package not installed.\nYou can use the following command line to solve this issue:\n\tsudo apt-get install texinfo"
 
 echo "[*] Cleaning previous installations."
 if [ -d "./lib/include" ]; then
