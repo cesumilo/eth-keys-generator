@@ -66,6 +66,18 @@ function install_deps() {
     export PATH=$PATH:$PWD/bin
 }
 
+if [ -z "$1" && "$1" = "clean" ]; then
+    cd lib/auto-auto-complete
+    make clean
+    cd ../argparser
+    make clean
+    cd ../libkeccak
+    make clean
+    cd ../sha3sum
+    make clean 
+    exit 0
+fi
+
 echo "[*] Checking operating system."
 check_os
 
