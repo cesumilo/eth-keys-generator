@@ -17,6 +17,9 @@ function check_os() {
 }
 
 function check_deps() {
+    dpkg-query -W -f='${Status}\n' build-essential | grep "^install ok"
+    check_error $? "build-essential package not installed.\nYou can use the following command line to solve this issue:\n\tsudo apt-get install build-essential"
+
     dpkg-query -W -f='${Status}\n' texinfo | grep "^install ok"
     check_error $? "texinfo package not installed.\nYou can use the following command line to solve this issue:\n\tsudo apt-get install texinfo"
 
