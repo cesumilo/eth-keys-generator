@@ -20,6 +20,12 @@ $> ./install-deps clean
 $> ./keys-generator myname [ -c or --create-account ]
 ```
 
+## Output
+- `${key_name}.pub` - Public key in hex.
+- `${key_name}.key` - Private key in hex.
+- `${key_name}_addr.txt` - Account address in hex.
+- `${key_name}key` - Ciphered account.
+
 ## References
 - [Create full ethereum wallet, keypair and address](https://kobl.one/blog/create-full-ethereum-keypair-and-address/), by Vincent KOBEL
 - [Libkeccak](https://github.com/maandree/libkeccak)
