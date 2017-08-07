@@ -51,7 +51,7 @@ if [ "$create_account" = "1" ]; then
     echo
     echo $password > pass.tmp
 
-    geth --password pass.tmp account import ${key_name}.key | grep "$account_addr"
+    geth --password pass.tmp account import ${key_name}_acc.key | grep "$account_addr"
     if [ "$?" = 0 ]; then
         rm pass.tmp
         echo "Your account has been created!"
