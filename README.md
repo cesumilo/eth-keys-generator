@@ -12,7 +12,7 @@ $> ./install-deps clean
 
 ## Use keys generator
 ```
-$> ./keys-generator myname [ -c or --create-account ]
+$> ./keys-generator myname [ -c or --create-account ] [ --keygen ]
 ```
 
 ## Output
