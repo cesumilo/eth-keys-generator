@@ -40,10 +40,17 @@ rm key.tmp
 echo -e "Ethereum address: `cat ${key_name}_addr.txt`"
 
 if [ "$create_account" = "1" ]; then
-    geth account import ${key_name}.key | grep "`cat ${key_name}_addr.txt`"
+    echo -n Password: 
+    read -s password
+    echo
+    echo $password > pass.tmp
+
+    geth --password pass.tmp account import ${key_name}.key | grep "`cat ${key_name}_addr.txt`"
     if [ "$?" = 0 ]; then
+        rm pass.tmp
         echo "Your account has been created!"
     else
+        rm pass.tmp
         (>&2 echo "Cannot create account with geth and private key.")
         exit 1
     fi
