@@ -34,7 +34,7 @@ echo -e "--------------------------------------------------"
 
 sudo openssl ecparam -name secp256k1 -genkey -noout | openssl ec -text -noout > key.tmp
 cat key.tmp |grep pub -A 5 | tail -n +2 | tr -d '\n[:space:]:' | sed 's/^04//' > ${key_name}.pub
-cat ${key_name}_key.pub | keccak-256sum -x -l | tr -d ' -' | tail -c 41 > ${key_name}_addr.txt
+cat ${key_name}.pub | keccak-256sum -x -l | tr -d ' -' | tail -c 41 > ${key_name}_addr.txt
 cat key.tmp |grep priv -A 3 | tail -n +2 | tr -d '\n[:space:]:' | sed 's/^00//' > ${key_name}.key
 rm key.tmp
 echo -e "Ethereum address: `cat ${key_name}_addr.txt`"
