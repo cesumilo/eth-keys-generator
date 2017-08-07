@@ -14,7 +14,7 @@ $> ./install-deps clean
 
 ## Use keys generator
 ```
-$> ./keys-generator myname
+$> ./keys-generator myname [ -c or --create-account ]
 ```
 
 ## References
