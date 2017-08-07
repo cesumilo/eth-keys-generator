@@ -50,7 +50,7 @@ if [ "$create_account" = "1" ]; then
     if [ "$?" = 0 ]; then
         rm pass.tmp
         echo "Your account has been created!"
-        cat $HOME/.ethereum/keystore/`ls $HOME/.ethereum/keystore | grep "$account_addr"` > key_${key_name}
+        cat $HOME/.ethereum/keystore/`ls $HOME/.ethereum/keystore | grep "$account_addr"` > ${key_name}key
     else
         rm pass.tmp
         (>&2 echo "Cannot create account with geth and private key.")
