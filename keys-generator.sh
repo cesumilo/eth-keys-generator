@@ -37,7 +37,8 @@ cat key.tmp |grep pub -A 5 | tail -n +2 | tr -d '\n[:space:]:' | sed 's/^04//' >
 cat ${key_name}.pub | keccak-256sum -x -l | tr -d ' -' | tail -c 41 > ${key_name}_addr.txt
 cat key.tmp |grep priv -A 3 | tail -n +2 | tr -d '\n[:space:]:' | sed 's/^00//' > ${key_name}.key
 rm key.tmp
-echo -e "Ethereum address: `cat ${key_name}_addr.txt`"
+account_addr=`cat ${key_name}_addr.txt`
+echo -e "Ethereum address: `cat ${account_addr}`"
 
 if [ "$create_account" = "1" ]; then
     echo -n Password: 
@@ -45,10 +46,11 @@ if [ "$create_account" = "1" ]; then
     echo
     echo $password > pass.tmp
 
-    geth --password pass.tmp account import ${key_name}.key | grep "`cat ${key_name}_addr.txt`"
+    geth --password pass.tmp account import ${key_name}.key | grep "$account_addr"
     if [ "$?" = 0 ]; then
         rm pass.tmp
         echo "Your account has been created!"
+        cat $HOME/.ethereum/keystore/`ls $HOME/.ethereum/keystore | grep "$account_addr"` > key_${key_name}
     else
         rm pass.tmp
         (>&2 echo "Cannot create account with geth and private key.")
