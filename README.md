@@ -21,10 +21,14 @@ $> ./keys-generator myname [ -c or --create-account ]
 ```
 
 ## Output
-- `${key_name}.pub` - Public key in hex.
-- `${key_name}.key` - Private key in hex.
+- `${key_name}_acc.pub` - Public key for account in hex.
+- `${key_name}_acc.key` - Private key for account in hex.
 - `${key_name}_addr.txt` - Account address in hex.
+If `-c` or `--create-account` is used:
 - `${key_name}key` - Ciphered account.
+If `--keygen` is used:
+- `${key_name}.pub` - Node public key.
+- `${key_name}.key` - Node private key.
 
 ## References
 - [Create full ethereum wallet, keypair and address](https://kobl.one/blog/create-full-ethereum-keypair-and-address/), by Vincent KOBEL
