@@ -21,7 +21,7 @@ $> ./keys-generator myname [ -c or --create-account ]
 ```
 
 ## References
-- [Create full ethereum wallet, keypair and address](https://kobl.one/blog/create-full-ethereum-keypair-and-address/), Vincent KOBEL
+- [Create full ethereum wallet, keypair and address](https://kobl.one/blog/create-full-ethereum-keypair-and-address/), by Vincent KOBEL
 - [Libkeccak](https://github.com/maandree/libkeccak)
 - [sha3sum](https://github.com/maandree/sha3sum)
 - [auto-auto-complete](https://github.com/maandree/auto-auto-complete)
