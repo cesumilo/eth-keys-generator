@@ -1,6 +1,10 @@
 # Ethereum (like) Keypair Generator
 
-It is a script bash that run some commands to generate a public, private key and compute the ethereum address of the new account.  ## Dependencies (only for creating account) - [geth](https://github.com/ethereum/go-ethereum/wiki/geth)
+It is a script bash that run some commands to generate a public, private key and compute the ethereum address of the new account.
+
+## Dependencies 
+- [geth](https://github.com/ethereum/go-ethereum/wiki/geth) (only for creating account)
+- [constellation-node](https://github.com/jpmorganchase/constellation) (only for node keypair creation)
 
 ## Install dependencies
 ```
