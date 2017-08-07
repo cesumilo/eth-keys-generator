@@ -41,7 +41,7 @@ echo -e "Ethereum address: `cat ${key_name}_addr.txt`"
 
 if [ "$create_account" = "1" ]; then
     geth account import ${key_name}.key | grep "`cat ${key_name}_addr.txt`"
-    if [ "$?" = 1 ]; then
+    if [ "$?" = 0 ]; then
         echo "Your account has been created!"
     else
         (>&2 echo "Cannot create account with geth and private key.")
