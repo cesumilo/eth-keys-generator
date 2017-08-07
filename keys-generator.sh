@@ -38,7 +38,7 @@ cat ${key_name}.pub | keccak-256sum -x -l | tr -d ' -' | tail -c 41 > ${key_name
 cat key.tmp |grep priv -A 3 | tail -n +2 | tr -d '\n[:space:]:' | sed 's/^00//' > ${key_name}.key
 rm key.tmp
 account_addr=`cat ${key_name}_addr.txt`
-echo -e "Ethereum address: `cat ${account_addr}`"
+echo -e "Ethereum address: ${account_addr}"
 
 if [ "$create_account" = "1" ]; then
     echo -n Password: 
