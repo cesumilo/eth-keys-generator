@@ -16,3 +16,10 @@ $> ./install-deps clean
 ```
 $> ./keys-generator myname
 ```
+
+## References
+- [Create full ethereum wallet, keypair and address](https://kobl.one/blog/create-full-ethereum-keypair-and-address/), Vincent KOBEL
+- [Libkeccak](https://github.com/maandree/libkeccak)
+- [sha3sum](https://github.com/maandree/sha3sum)
+- [auto-auto-complete](https://github.com/maandree/auto-auto-complete)
+- [argparser](https://github.com/maandree/argparser)
