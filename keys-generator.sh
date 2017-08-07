@@ -11,6 +11,7 @@ function parse_args() {
     create_account=0
     if [ "$1" = "--create-account" ] || [ "$1" = "-c" ]; then
         create_account=1
+        key_name=$2
     else
         key_name=$1
     fi
@@ -19,12 +20,12 @@ function parse_args() {
         create_account=1
     elif [ -n "$2" ] && [ "$2" = "--create-account" ]; then
         create_account=1
-    elif [ -n "$2" ]; then
-        key_name=$2
     fi
 
     create_node_keypair=0
     if [ -n "$3" ] && [ "$3" = "--keygen" ]; then
+        create_node_keypair=1
+    elif [ -n "$2" ] && [ "$2" = "--keygen" ]; then
         create_node_keypair=1
     fi
 }
